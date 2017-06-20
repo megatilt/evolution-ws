@@ -1,0 +1,47 @@
+{
+  "name": "evolution-ws",
+  "version": "1.0.0",
+  "description": "Pure JavaScript Evolution/Evolution websocket interface for node.js and browsers.",
+  "browser": {
+    "ws": false
+  },
+  "scripts": {
+    "test": "SET BABEL_ENV=test & mocha --compilers js:babel-core/register --recursive",
+    "test:watch": "npm test -- --watch",
+    "test:manager": "SET BABEL_ENV=test & mocha --compilers js:babel-core/register ./test/Manager --watch",
+    "clean": "dir",
+    "prebuild": "npm run clean",
+    "build": "SET BABEL_ENV=cjs & babel lib --out-dir cjs",
+    "build-es": "SET BABEL_ENV=es & babel ./lib -d es",
+    "postbuild": "npm run browserify && npm run build-es",
+    "prepublish": "npm run build",
+    "browserify": "NODE_ENV=production browserify cjs/src/ApiInstances.js --standalone evolution_ws -o build/evolution-ws.js -d",
+    "postbrowserify": "NODE_ENV=production uglifyjs --compress --mangle --sequences --drop_console --mangle-props --screw-ie8 --output build/evolution-ws.min.js -- build/evolution-ws.js",
+    "bundle": "npm run browserify && npm run minify"
+  },
+  "author": "Sigve Kvalsvik <bitsharesblocks@gmail.com> (https://github.com/svk31)",
+  "contributors": [
+    "James Calfee <james@jcalfee.info> (https://github.com/jcalfee/)"
+  ],
+  "license": "BSD-2-Clause-FreeBSD",
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "main": "cjs/index.js",
+  "jsnext:main": "es/index.js",
+  "dependencies": {
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "ReconnectingWebSocket": "git+https://github.com/bitshares/reconnecting-websocket",
+    "ws": "^2.2.0"
+  },
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "browserify": "^13.0.1",
+    "mocha": "^2.3.4",
+    "uglify-js": "^3.0.15"
+  }
+}
